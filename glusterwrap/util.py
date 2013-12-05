@@ -7,6 +7,7 @@ import os
 import os.path
 import datetime, time
 import subprocess
+import socket
 
 """
 Search PATH for executable files with given name.
@@ -48,3 +49,10 @@ def do_process(program):
         response = None
     finally:
         return response
+
+'''
+Get local ip address.
+'''
+def get_ip():
+    hostname = socket.gethostname()
+    return socket.gethostbyname(hostname)

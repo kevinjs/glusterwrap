@@ -12,7 +12,7 @@ if __name__ == "__main__":
 #    t1 = datetime.datetime.now()
 #    peer_status_v2 = gluster.peer.status_v2(remotehost='10.0.0.54')
 #    t2 = datetime.datetime.now()
-    peer_status = gw.peer.status(remotehost='10.0.0.54')
+    peer_status = gw.peer.status(remotehost=gw.util.get_ip())
 #    t3 = datetime.datetime.now()
 #    print 'peer status_v2:'
 #    print_list(peer_status_v2)
@@ -22,7 +22,7 @@ if __name__ == "__main__":
 #    print 'status: ' + str((t3 - t2).microseconds)
 
     print '-------------'
-    volume_status = gw.volume.info()
+    volume_status = gw.volume.info(remotehost=gw.util.get_ip())
     print 'volume status:'
     print_list(volume_status)
     
