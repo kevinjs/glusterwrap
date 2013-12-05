@@ -13,35 +13,29 @@ def status(remotehost="localhost"):
     {
      "peerstatus": {
       "10.0.0.60": {
-       "timestamp": "2013-12-05 12:54:32", 
+       "timestamp": "2013-12-05 13:43:12", 
        "host": "10.0.0.60", 
        "local": false, 
        "uuid": "3e9ba3a8-32ba-48db-8a01-95c563a1d476", 
        "state": "Peer in Cluster (Connected)"
       }, 
-      "10.0.0.48": {
-       "timestamp": "2013-12-05 12:54:32", 
-       "host": "10.0.0.48", 
-       "local": false, 
-       "uuid": "08845703-39c2-466b-9fe5-24ae42969dd0", 
-       "state": "Peer in Cluster (Connected)"
-      }, 
       "10.0.0.9": {
-       "timestamp": "2013-12-05 12:54:32", 
+       "timestamp": "2013-12-05 13:43:12", 
        "host": "10.0.0.9", 
        "local": false, 
        "uuid": "3fa722c1-e8d9-4568-a7d0-5dcc0832a10d", 
        "state": "Peer in Cluster (Connected)"
       }, 
       "10.0.0.54": {
-       "timestamp": "2013-12-05 12:54:32", 
+       "timestamp": "2013-12-05 13:43:12", 
        "host": "10.0.0.54", 
        "local": true, 
        "uuid": "82f40521-297b-4605-ae57-2c54ca9cdae0", 
        "state": "Peer in Cluster (Connected)"
       }
      }, 
-     "peers": 4, 
+     "timestamp": "2013-12-05 13:43:12", 
+     "peers": 3, 
      "reportor": "10.0.0.54", 
      "state": "NORMAL"
     }
