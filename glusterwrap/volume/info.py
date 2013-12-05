@@ -16,7 +16,10 @@ def info(volname="all",remotehost="localhost"):
 
 def _info(volname="all",remotehost="localhost"):
     # Initialize
-    volumes = {"volumes":0, "state":"NORMAL"}
+    volumes = {"volumes":0, 
+               "reportor":remotehost, 
+               "timestamp":gw.util.get_now(),
+               "state":"NORMAL"}
 
     # Prepare process cmd
     gluster_path = None
