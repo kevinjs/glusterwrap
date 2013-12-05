@@ -16,7 +16,7 @@ def info(volname="all",remotehost="localhost"):
 
 def _info(volname="all",remotehost="localhost"):
     # Initialize
-    volumes = {"volumes":0, "state":"Normal"}
+    volumes = {"volumes":0, "state":"NORMAL"}
 
     # Prepare process cmd
     gluster_path = None
@@ -59,5 +59,5 @@ def _info(volname="all",remotehost="localhost"):
                 opt,value = [x.strip() for x in m.group(1).split(":")]
                 volumes[volname]["options"][opt] = value
     else:
-        volumes['state'] = "Local gluster stop"
+        volumes['state'] = "LOCAL_GLUSTER_STOP"
     return volumes

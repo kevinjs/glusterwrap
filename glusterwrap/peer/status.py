@@ -56,19 +56,23 @@ def _status(remotehost="localhost", recursion=False):
 
     init_status = gw.util.do_process(program)
 
+    #import pdb;pdb.set_trace()
+
     if init_status != None:
         # Initialize 1st node
         tmp_self = {}
         tmp_self["host"] = remotehost
         tmp_self["timestamp"] = gw.util.get_now()
         tmp_self["uuid"] = ""
+        tmp_self["local"] = True
         tmp_self["state"] = "Peer in Cluster (Connected)"
 
         hostlist = []
         # step through the output and build the dict
         for line in init_status:
-            if line == "No peers present":
+            if line.count("No peers present") != 0:
                 peerstatus["peers"] = 0
+                peerstatus["state"] = "NO_PEERS_PRESENT"
                 return peerstatus
             m = re.match("^Number of Peers: (\d+)$", line)
             if m:
@@ -79,6 +83,7 @@ def _status(remotehost="localhost", recursion=False):
                 hostlist.append(hostname)
                 peerstatus["peerstatus"][hostname] = {}
                 peerstatus["peerstatus"][hostname]["host"] = hostname
+                peerstatus["peerstatus"][hostname]["local"] = False
                 peerstatus["peerstatus"][hostname]["timestamp"] = gw.util.get_now()
             m = re.match("Uuid: ([-0-9a-f]+)", line)
             if m:
@@ -117,6 +122,7 @@ def _status(remotehost="localhost", recursion=False):
                              hostname not in hostlist and \
                              not peerstatus["peerstatus"][hostname].has_key("state"):
                             peerstatus["peerstatus"][hostname]["state"] = m.group(1)
+                            peerstatus["peerstatus"][hostname]["local"] = True
                             has_self = True
                             hostlist.append(hostname)
                             break;
@@ -127,15 +133,19 @@ def _status(remotehost="localhost", recursion=False):
                 break
 
             # If other node are all disconnected
+        peerstatus["state"] = "NORMAL"
         if not has_self:
             peerstatus["peerstatus"][remotehost] = tmp_self
+            peerstatus["state"] = "ONLY_SELF"
         peerstatus["peers"] = len(peerstatus["peerstatus"])
     else:
         # service gluster on this server is shutdown.
         peerstatus['peerstatus'][remotehost] = {}
         peerstatus["peerstatus"][remotehost]["host"] = remotehost
         peerstatus["peerstatus"][remotehost]["state"] = "Local gluster stop"
+        peerstatus["peerstatus"][remotehost]["local"] = True
         peerstatus["peerstatus"][remotehost]["uuid"] = ""
         peerstatus["peerstatus"][remotehost]["timestamp"] = gw.util.get_now()
+        peerstatus["state"] = "LOCAL_GLUSTER_STOP"
     return peerstatus
        
