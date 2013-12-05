@@ -9,30 +9,41 @@ import glusterwrap as gw
 def status(remotehost="localhost"):
     """
     Retrieve the status of the peer group.
-
     Returns a dict in the form of:
     {
      "peerstatus": {
       "10.0.0.60": {
-       "timestamp": "2013-12-04 16:49:26", 
+       "timestamp": "2013-12-05 12:54:32", 
        "host": "10.0.0.60", 
+       "local": false, 
        "uuid": "3e9ba3a8-32ba-48db-8a01-95c563a1d476", 
        "state": "Peer in Cluster (Connected)"
       }, 
       "10.0.0.48": {
-       "timestamp": "2013-12-04 16:49:26", 
+       "timestamp": "2013-12-05 12:54:32", 
        "host": "10.0.0.48", 
+       "local": false, 
        "uuid": "08845703-39c2-466b-9fe5-24ae42969dd0", 
        "state": "Peer in Cluster (Connected)"
       }, 
+      "10.0.0.9": {
+       "timestamp": "2013-12-05 12:54:32", 
+       "host": "10.0.0.9", 
+       "local": false, 
+       "uuid": "3fa722c1-e8d9-4568-a7d0-5dcc0832a10d", 
+       "state": "Peer in Cluster (Connected)"
+      }, 
       "10.0.0.54": {
-       "timestamp": "2013-12-04 16:49:26", 
+       "timestamp": "2013-12-05 12:54:32", 
        "host": "10.0.0.54", 
+       "local": true, 
        "uuid": "82f40521-297b-4605-ae57-2c54ca9cdae0", 
        "state": "Peer in Cluster (Connected)"
       }
      }, 
-     "peers": 3
+     "peers": 4, 
+     "reportor": "10.0.0.54", 
+     "state": "NORMAL"
     }
     """
     return _status(remotehost)
@@ -73,6 +84,8 @@ def _status(remotehost="localhost", recursion=False):
             if line.count("No peers present") != 0:
                 peerstatus["peers"] = 0
                 peerstatus["state"] = "NO_PEERS_PRESENT"
+                peerstatus["reportor"] = remotehost
+                peerstatus["timestamp"] = gw.util.get_now()
                 return peerstatus
             m = re.match("^Number of Peers: (\d+)$", line)
             if m:
@@ -123,6 +136,8 @@ def _status(remotehost="localhost", recursion=False):
                              not peerstatus["peerstatus"][hostname].has_key("state"):
                             peerstatus["peerstatus"][hostname]["state"] = m.group(1)
                             peerstatus["peerstatus"][hostname]["local"] = True
+                            peerstatus["reportor"] = hostname
+                            peerstatus["timestamp"] = gw.util.get_now()
                             has_self = True
                             hostlist.append(hostname)
                             break;
@@ -137,6 +152,8 @@ def _status(remotehost="localhost", recursion=False):
         if not has_self:
             peerstatus["peerstatus"][remotehost] = tmp_self
             peerstatus["state"] = "ONLY_SELF"
+            peerstatus["reportor"] = remotehost
+            peerstatus["timestamp"] = gw.util.get_now()
         peerstatus["peers"] = len(peerstatus["peerstatus"])
     else:
         # service gluster on this server is shutdown.
@@ -144,6 +161,8 @@ def _status(remotehost="localhost", recursion=False):
         peerstatus["peerstatus"][remotehost]["host"] = remotehost
         peerstatus["peerstatus"][remotehost]["state"] = "Local gluster stop"
         peerstatus["peerstatus"][remotehost]["local"] = True
+        peerstatus["reportor"] = remotehost
+        peerstatus["timestamp"] = gw.util.get_now()
         peerstatus["peerstatus"][remotehost]["uuid"] = ""
         peerstatus["peerstatus"][remotehost]["timestamp"] = gw.util.get_now()
         peerstatus["state"] = "LOCAL_GLUSTER_STOP"
