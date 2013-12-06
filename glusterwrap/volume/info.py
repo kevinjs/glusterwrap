@@ -19,7 +19,8 @@ def _info(volname="all",remotehost="localhost"):
     volumes = {"volumes":0, 
                "reportor":remotehost, 
                "timestamp":gw.util.get_now(),
-               "state":"NORMAL"}
+               "state":"NORMAL",
+               "volinfo":{}}
 
     # Prepare process cmd
     gluster_path = None
@@ -43,24 +44,25 @@ def _info(volname="all",remotehost="localhost"):
             if m:
                 volname = m.group(1)
                 volumes['volumes'] = volumes['volumes'] + 1
-                volumes[volname] = {"bricks": [], "options": {}}
-                volumes[volname]["timestamp"] = gw.util.get_now()
+                volumes["volinfo"][volname] = {"bricks": [], "options": {}}
+                volumes["volinfo"][volname]["timestamp"] = gw.util.get_now()
+                volumes["volinfo"][volname]["volname"] = volname
             m = re.match("Type: (.+)",line)
             if m:
-                volumes[volname]["type"] = m.group(1)
+                volumes["volinfo"][volname]["type"] = m.group(1)
             m = re.match("Status: (.+)",line)
             if m:
-                volumes[volname]["status"] = m.group(1)
+                volumes["volinfo"][volname]["status"] = m.group(1)
             m = re.match("Transport-type: (.+)",line)
             if m:
-                volumes[volname]["transport"] = [x.strip() for x in m.group(1).split(",")]
+                volumes["volinfo"][volname]["transport"] = [x.strip() for x in m.group(1).split(",")]
             m = re.match("Brick[1-9][0-9]*: (.+)",line)
             if m:
-                volumes[volname]["bricks"].append(m.group(1))
+                volumes["volinfo"][volname]["bricks"].append(m.group(1))
             m = re.match("^([-.a-z]+: .+)$",line)
             if m:
                 opt,value = [x.strip() for x in m.group(1).split(":")]
-                volumes[volname]["options"][opt] = value
+                volumes["volinfo"][volname]["options"][opt] = value
     else:
         volumes['state'] = "LOCAL_GLUSTER_STOP"
     return volumes
