@@ -10,6 +10,43 @@ def info(volname="all",remotehost="localhost"):
     """
     Retrieve the volume information
     Returns a dict in the form of:
+    {
+     "timestamp": "2013-12-06 08:46:45", 
+     "state": "NORMAL", 
+     "volinfo": {
+      "data_backup": {
+       "status": "Started", 
+       "bricks": [
+        "10.0.0.54:/data/back", 
+        "10.0.0.48:/data/back", 
+        "10.0.0.60:/data/back"
+       ], 
+       "timestamp": "2013-12-06 08:46:45", 
+       "volname": "data_backup", 
+       "type": "Replicate", 
+       "options": {}, 
+       "transport": [
+        "tcp"
+       ]
+      }, 
+      "data_volume": {
+       "status": "Started", 
+       "bricks": [
+        "10.0.0.48:/data/gluster", 
+        "10.0.0.60:/data/gluster"
+       ], 
+       "timestamp": "2013-12-06 08:46:45", 
+       "volname": "data_volume", 
+       "type": "Replicate", 
+       "options": {}, 
+       "transport": [
+        "tcp"
+       ]
+      }
+     }, 
+     "reportor": "192.168.75.64", 
+     "volumes": 2
+    }
     If ``remotehost`` is set, volume info will be retrieved from the remote host.
     """
     return _info(volname, remotehost)
